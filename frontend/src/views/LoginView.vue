@@ -46,7 +46,7 @@ export default {
                 //this.$cookie.set("token", response.data.token, "expiring time")
 
                 const user = response.data.user;
-                this.UserStore.setData(user.userId,user.email,user.name)
+                this.UserStore.setData(user.id,user.email,user.name);
                 this.loginSuccess = true;
             }catch(error){
                 console.log(error);

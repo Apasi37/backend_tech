@@ -1,20 +1,26 @@
 <?php
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ConferenceController;
+
+use App\Http\Middleware\AdminMiddleware;
 
 Route::resource("/users",UsersController::class);
+Route::resource("/conferences",ConferenceController::class);
 
-Route::post('/login', [AuthController::class,'login']);
+Route::post('/login', [AuthController::class,'login'])->name("login");
 Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:api');
 
-Route::middleware(['auth:api'.'admin'])->group(function(){
+Route::middleware(AdminMiddleware::class)->group(function(){
+    Route::get('/admin/verify',[AdminController::class,'verify']);
     Route::get('/admin/dashboard',function(){
         return response()->json(['message'=>'Welcome admin!']);
     });
 });
 
-Route::middleware(['auth:api'.'redactor'])->group(function(){
-    Route::get('/redactor/dashboard',function(){
-        return response()->json(['message'=>'Welcome redactor!']);
+Route::middleware(['auth:api','editor'])->group(function(){
+    Route::get('/editor/dashboard',function(){
+        return response()->json(['message'=>'Welcome editor!']);
     });
 });

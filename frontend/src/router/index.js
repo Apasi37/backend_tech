@@ -20,6 +20,21 @@ const router = createRouter({
       component: () => import('../views/WysiwygView.vue'),
     },
     {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../views/ProfileView.vue'),
+    },
+    {
+      path: '/conferences',
+      name: 'conferences',
+      component: () => import('../views/ConferencesView.vue'),
+    },
+    {
+      path: '/conference/:id',
+      name: 'conference',
+      component: () => import('../views/ConferenceView.vue'),
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: () => import('../views/AdminView.vue'),
