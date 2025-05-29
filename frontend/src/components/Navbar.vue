@@ -7,7 +7,10 @@
           <RouterLink to="/" class="text-white">Home</RouterLink>
         </li>
         <li class="nav-item">
-          <RouterLink to="/wysiwyg" class="text-white">Wysiwyg</RouterLink>
+          <RouterLink to="/conferences" class="text-white">Conferences</RouterLink>
+        </li>
+        <li class="nav-item">
+          <RouterLink to="/admin" class="text-white">Admin</RouterLink>
         </li>
       </ul>
     </div>

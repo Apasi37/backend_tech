@@ -11,13 +11,7 @@
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
 </form>
-<div><button @click="logout" class="btn btn-primary">Logout</button></div>
 <div>{{ error }}</div>
-
-<div v-if="loginSuccess" class="container">
-    <h1>hello! {{ UserStore.name }}</h1>
-</div>
-
 </template>
 
 <script>
@@ -47,16 +41,7 @@ export default {
 
                 const user = response.data.user;
                 this.UserStore.setData(user.id,user.email,user.name);
-                this.loginSuccess = true;
-            }catch(error){
-                console.log(error);
-            }
-        },
-        async logout(){
-            try {
-                await this.$api.post("/logout");
-                localStorage.removeItem('token');
-                this.UserStore.$reset();
+                this.$router.push({path:"/profile"});
             }catch(error){
                 console.log(error);
             }

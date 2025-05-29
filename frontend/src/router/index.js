@@ -33,6 +33,9 @@ const router = createRouter({
       path: '/conference/:id',
       name: 'conference',
       component: () => import('../views/ConferenceView.vue'),
+      children:[
+        
+      ]
     },
     {
       path: '/admin',
