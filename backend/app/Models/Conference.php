@@ -26,6 +26,6 @@ class Conference extends Model
     }
 
     public function page(){
-        return $this->belongsToMany(Page::class,'conference_page');
+        return $this->hasMany(Page::class);
     }
 }

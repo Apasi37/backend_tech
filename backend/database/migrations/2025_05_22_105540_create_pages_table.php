@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('conference_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->mediumText('html');
             $table->timestamps();

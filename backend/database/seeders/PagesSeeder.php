@@ -17,24 +17,28 @@ class PagesSeeder extends Seeder
         DB::table('pages')->insert(
             [
                 [
+                    'conference_id' => 1,
                     'name' => 'conf1 page1',
                     'html' => '<p>paragraph1</p><p>paragraph</p><p>paragraph3</p>',
                     'created_at' => now(),
                     'updated_at' => now()
                 ],
                 [
+                    'conference_id' => 1,
                     'name' => 'conf1 page2',
                     'html' => '<p>secondpage</p><p>paragraph</p><p>paragraph3</p>',
                     'created_at' => now(),
                     'updated_at' => now()
                 ],
                 [
+                    'conference_id' => 2,
                     'name' => 'conf2 page1',
                     'html' => '<p>paragraph1</p><p>paragraph</p><p>paragraph3</p>',
                     'created_at' => now(),
                     'updated_at' => now()
                 ],
                 [
+                    'conference_id' => 2,
                     'name' => 'conf2 page2',
                     'html' => '<p>secondpage</p><p>paragraph</p><p>paragraph3</p>',
                     'created_at' => now(),

@@ -13,11 +13,12 @@ Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:api')
 
 Route::get("/profile/conferences/{id}",[ProfileController::class,"conferences"]);
 
+Route::resource("/users",UsersController::class);
+Route::resource("/conferences",ConferenceController::class);
 
 Route::middleware(AdminMiddleware::class)->group(function(){
     Route::get('/admin/verify',[AdminController::class,'verify']);
-    Route::resource("/users",UsersController::class);
-    Route::resource("/conferences",ConferenceController::class);
+    
     Route::get('/admin/dashboard',function(){
         return response()->json(['message'=>'Welcome admin!']);
     });

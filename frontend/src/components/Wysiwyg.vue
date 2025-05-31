@@ -1,5 +1,4 @@
 <template>
-    <div>Wysiwyg view</div>
     <div>
         <Editor
       api-key="fp96f5nz8wa2szjk491igthnj4ru9i0nlg7j8dmrtupxflxr"
