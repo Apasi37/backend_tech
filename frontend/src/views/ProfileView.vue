@@ -1,26 +1,31 @@
 <template>
-    <div class="container">
+    <div class="container mt-4">
         <div class="row">
-            <div>{{ UserStore.name }}</div>
-            <div>{{ UserStore.email }}</div>
-            <div>{{ UserStore.userId }}</div>
-            <button @click="logout" class="btn btn-primary">Logout</button>
-        </div>
-        <div class="row">
-            <div>conferences</div>
-            <div v-for="i in conferences">
-                <div>
-                    {{ i.name }}
+            <div class="card">
+                <div class="card-body">
+                    <h1>{{ UserStore.name }}</h1>
+                    <div>{{ UserStore.email }}</div>
+                    <button @click="logout()" class="btn btn-primary mt-5">Logout</button>
                 </div>
             </div>
+        </div>
+        <div class="row mt-4">
+            <h3>My conferences:</h3>
+            <ul class="list-group">
+                <RouterLink class="list-group-item list-group-item-action" :to="'/conference/'+i.id" v-for="i in conferences">{{ i.name }}</RouterLink>
+            </ul>
         </div>
     </div>
 </template>
 
 <script>
 import { useUserStore } from '@/stores/UserStore.js'
+import { RouterLink } from 'vue-router'
 
 export default {
+    components:{
+        RouterLink
+    },
     data(){
         return {
             UserStore: useUserStore(),

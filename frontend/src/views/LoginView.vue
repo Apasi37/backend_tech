@@ -1,6 +1,11 @@
 <template>
+<div class="row">
 
-<form @submit.prevent="login" class="mt-5">
+<div class="col"></div>
+<div class="col-6">
+    <div class="card mt-5">
+        <div class="card-body">
+            <form @submit.prevent="login">
     <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Email address</label>
         <input v-model="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -10,8 +15,12 @@
         <input v-model="password" type="password" class="form-control" id="exampleInputPassword1">
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
-</form>
-<div>{{ error }}</div>
+    </form>
+        </div>
+    </div>
+</div>
+<div class="col"></div>
+</div>
 </template>
 
 <script>

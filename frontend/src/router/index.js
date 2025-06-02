@@ -15,11 +15,6 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
-      path: '/wysiwyg',
-      name: 'wysiwyg',
-      component: () => import('../views/WysiwygView.vue'),
-    },
-    {
       path: '/profile',
       name: 'profile',
       component: () => import('../views/ProfileView.vue'),
@@ -33,9 +28,6 @@ const router = createRouter({
       path: '/conference/:id',
       name: 'conference',
       component: () => import('../views/ConferenceView.vue'),
-      children:[
-        
-      ]
     },
     {
       path: '/admin',

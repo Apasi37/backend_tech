@@ -1,11 +1,12 @@
 <template>
-  <nav class=" bg-primary">
+<nav class="navbar navbar-expand-lg bg-primary">
   <div class="container-fluid">
-    <RouterLink to="/" class="text-white">Home</RouterLink>
-    <RouterLink to="/conferences" class="text-white">Conferences</RouterLink>
-    <RouterLink to="/admin" class="text-white">Admin</RouterLink>
-    <RouterLink to="/login" v-if="!UserStore.name" class="text-white">Login</RouterLink>
-    <RouterLink to="/profile" v-if="UserStore.name" class="text-white">{{ UserStore.name }}</RouterLink>
+    <div class="navbar-nav">
+      <RouterLink to="/" class="nav-link text-white">Home</RouterLink>
+      <RouterLink to="/admin" class="nav-link text-white">Admin</RouterLink>
+    </div>
+    <RouterLink to="/login" v-if="!UserStore.name" class="nav-link text-white">Login</RouterLink>
+    <RouterLink to="/profile" v-if="UserStore.name" class="nav-link text-white">{{ UserStore.name }}</RouterLink>
   </div>
 </nav>
 </template>

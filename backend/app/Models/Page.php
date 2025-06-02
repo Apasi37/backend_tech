@@ -8,7 +8,7 @@ use DateTimeInterface;
 
 class Page extends Model
 {
-    protected $fillable = ['name','html'];
+    protected $fillable = ['name','html','conference_id'];
 
     /**
     * Prepare a date for array / JSON serialization.

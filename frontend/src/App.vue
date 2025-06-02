@@ -5,7 +5,7 @@
   </div>
   <div class="row">
     <div class="col"></div>
-    <div class="col bg-light min-vh-100">
+    <div class="col-7 bg-light min-vh-100">
       <RouterView />
     </div>
     <div class="col"></div>
