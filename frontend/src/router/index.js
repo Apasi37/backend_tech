@@ -20,11 +20,6 @@ const router = createRouter({
       component: () => import('../views/ProfileView.vue'),
     },
     {
-      path: '/conferences',
-      name: 'conferences',
-      component: () => import('../views/ConferencesView.vue'),
-    },
-    {
       path: '/conference/:id',
       name: 'conference',
       component: () => import('../views/ConferenceView.vue'),

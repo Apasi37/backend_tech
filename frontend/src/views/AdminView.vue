@@ -1,5 +1,4 @@
 <template>
-    <div>admin view</div>
     <div>
         <div>
             <label for="tables">Select Table: </label>

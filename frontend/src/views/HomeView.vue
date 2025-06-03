@@ -1,5 +1,5 @@
 <template>
-<div class="container mt-4">
+<div class="container mt-4 mb-4">
   <div class="row mt-4">
     <div class="col-3">
       <h4 class="text-center">Conferences</h4>

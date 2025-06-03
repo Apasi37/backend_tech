@@ -1,5 +1,5 @@
 <template>
-    <div class="container mt-4">
+    <div class="container mt-4 mb-4">
         <div class="row">
             <h3>{{ conference.name }}</h3>
             <div>
@@ -17,8 +17,7 @@
             <div class="col">
                 <div class="card" v-if="!editToggle">
                     <div class="card-body">
-                        <div class="text-break" v-html="pageHtml"></div>
-                        
+                        <div class="text-break overflow-auto" v-html="pageHtml"></div>
                     </div>
                 </div>
                 <div v-else>
@@ -85,9 +84,8 @@ export default {
                 params.append("html", "<p>Page is empty</p>");
                 const response = await this.$api.post('/pages',params);
                 this.responseMessage = response.data.message;
-                console.log(response.data.message);
                 this.getConference();
-                this.setPage(this.$route.params.id);
+                this.setPage(this.$route.query.id);
                 this.modalConfirm = true;
             }catch(error){
                 console.log(error);
@@ -98,6 +96,9 @@ export default {
                 const params = new URLSearchParams();
                 if(this.pageHtml!="")params.append("html", this.pageHtml);
                 await this.$api.patch('/pages/'+this.$route.query.page,params);
+                this.getConference();
+                this.setPage(this.$route.query.id);
+                this.editToggle = false;
             }catch(error){
                 console.log(error);
             }
@@ -106,7 +107,9 @@ export default {
             try {
                 const response = await this.$api.get('/conferences/'+this.$route.params.id);
                 this.conference = response.data;
-                this.pageHtml = this.conference.page[0].html;
+                if(this.pageHtml==""){
+                    this.pageHtml = this.conference.page[0].html;
+                }
             }catch(error){
                 console.log(error);
             }
