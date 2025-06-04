@@ -49,7 +49,7 @@ export default {
                 //this.$cookie.set("token", response.data.token, "expiring time")
 
                 const user = response.data.user;
-                this.UserStore.setData(user.id,user.email,user.name);
+                this.UserStore.setData(user.id,user.role,user.email,user.name);
                 this.$router.push({path:"/profile"});
             }catch(error){
                 console.log(error);

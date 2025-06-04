@@ -1,12 +1,13 @@
 <template>
-    <div>
+    <div class="container mt-4 mb-4">
         <div>
             <label for="tables">Select Table: </label>
             <select name="tables" id="tables" v-model="selectedTable" @change="getData()">
                 <option value="users">Users</option>
                 <option value="conferences">Conferences</option>
             </select>
-            <button data-bs-toggle="modal" data-bs-target="#modalAdd" @click="openModal({})">Add</button>
+            <button data-bs-toggle="modal" data-bs-target="#modalAdd" @click="openModal('add',{})">Add</button>
+            <RouterLink to="/upload">Upload document</RouterLink>
         </div>
 
         <div class="table-responsive">
@@ -21,8 +22,8 @@
             <tbody>
                 <tr v-for="data in tableData">
                     <td v-for="i in data" scope="row">{{ i }}</td>
-                    <td><button data-bs-toggle="modal" data-bs-target="#modalEdit" @click="openModal(data)">edit</button></td>
-                    <td><button data-bs-toggle="modal" data-bs-target="#modalDelete" @click="openModal(data)">delete</button></td>
+                    <td><button data-bs-toggle="modal" data-bs-target="#modalEdit" @click="openModal('edit',data)">edit</button></td>
+                    <td><button data-bs-toggle="modal" data-bs-target="#modalDelete" @click="openModal('delete',data)">delete</button></td>
                 </tr>
             </tbody>
         </table>
@@ -111,33 +112,54 @@
                 <thead><tr><th v-for="key in tableKeys" scope="col">{{ key }}</th></tr></thead>
                 <tbody><tr><td v-for="i in modalData" scope="row">{{ i }}</td></tr></tbody>
             </table>
-            <table class="table table-bordered table-sm" v-if="selectedTable=='users'"> 
-                <thead><tr>
-                    <th scope="col">Role</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Password</th>
-                </tr></thead>
-                <tbody><tr>
-                    <td scope="row">
-                        <select name="roles" id="roles" v-model="addRole">
-                            <option value="editor">Editor</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </td>
-                    <td scope="row"><input type="text" name="name" v-model="addName"></td>
-                    <td scope="row"><input type="text" name="email" v-model="addEmail"></td>
-                    <td scope="row"><input type="text" name="password" v-model="addPassword"></td>
-                </tr></tbody>
-            </table>
-            <table class="table table-bordered table-sm" v-if="selectedTable=='conferences'"> 
-                <thead><tr>
-                    <th scope="col">Name</th>
-                </tr></thead>
-                <tbody><tr>
-                    <td scope="row"><input type="text" name="name" v-model="addName"></td>
-                </tr></tbody>
-            </table>
+            <div v-if="selectedTable=='users'">
+                <table class="table table-bordered table-sm"> 
+                    <thead><tr>
+                        <th scope="col">Role</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Password</th>
+                    </tr></thead>
+                    <tbody><tr>
+                        <td scope="row">
+                            <select name="roles" id="roles" v-model="addRole">
+                                <option value="editor">Editor</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </td>
+                        <td scope="row"><input type="text" name="name" v-model="addName"></td>
+                        <td scope="row"><input type="text" name="email" v-model="addEmail"></td>
+                        <td scope="row"><input type="text" name="password" v-model="addPassword"></td>
+                    </tr></tbody>
+                </table>
+                <div>Assigned to conferences:</div>
+                <ul class="list-group mt-2">
+                    <li class="list-group-item list-group-item-action" v-for="i in conferences">{{ i.name }}</li>
+                </ul>
+            </div>
+            <div v-if="selectedTable=='conferences'">
+                <table class="table table-bordered table-sm"> 
+                    <thead><tr>
+                        <th scope="col">Name</th>
+                    </tr></thead>
+                    <tbody><tr>
+                        <td scope="row"><input type="text" name="name" v-model="addName"></td>
+                    </tr></tbody>
+                </table>
+                <div>Assigned editors:</div>
+                <ul class="list-group mt-2">
+                    <li class="list-group-item list-group-item-action" v-for="i in assignedEditors">{{ i.name }}</li>
+                </ul>
+                <div>Assign editor</div>
+                <div>
+                    <label for="">Search</label>
+                    <input type="text" v-model="searchedUser">
+                    <button class="btn" @click="searchUsers()">Search</button>
+                    <ul class="list-group mt-2">
+                        <li class="list-group-item list-group-item-action" v-for="i in searchedUsers">{{ i.name }}<button class="btn" @click="addEditor(i.id)">Add</button></li>
+                    </ul>
+                </div>
+            </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -153,8 +175,12 @@
 
 <script>
 import { useUserStore } from '@/stores/UserStore.js'
+import { RouterLink } from 'vue-router';
 
 export default {
+    components:{
+        RouterLink
+    },
     created(){
         this.verifyAdmin();
     },
@@ -165,19 +191,34 @@ export default {
             tableKeys: {},
             tableData: {},
             modalData: {},
+            modalData2: {},
             modalConfirm: false,
             addRole: "",
             addName: "",
             addEmail: "",
             addPassword: "",
+            addConference: "",
+            conferences: {},
+            assignedEditors: {},
+            searchedUsers: {},
+            searchedUser: "",
         };
     },
     mounted(){
         this.getData();
     },
     methods: {
-        openModal(data){
+        openModal(type,data){
             this.modalData = data;
+            if(type=='edit'){
+                if(this.selectedTable=="users"){
+                    this.getAssignedConferences(this.modalData.id);
+                }
+                if(this.selectedTable=="conferences"){
+                    this.getAssignedEditors(this.modalData.id);
+                    this.getUsers();
+                }
+            }
         },
         async editRow(){
             try{
@@ -238,7 +279,7 @@ export default {
         },
         async getData(){
             try{
-                let response = await this.$api.get("/"+this.selectedTable);
+                const response = await this.$api.get("/"+this.selectedTable);
                 if (response.data!=""){
                     this.tableData = response.data;
                     this.tableKeys = Object.keys(response.data[0]);
@@ -250,6 +291,50 @@ export default {
                 console.log(error);
             }
         },
+        async getAssignedConferences(id){
+            try{
+                const response = await this.$api.get("/users/"+id);
+                this.conferences = response.data.conference;
+            }catch(error){
+                console.log(error);
+            }
+        },
+        async getUsers(){
+            try{
+                const response = await this.$api.get("/users");
+                this.searchedUsers = response.data;
+            }catch(error){
+                console.log(error);
+            }
+        },
+        async getAssignedEditors(id){
+            try{
+                const response = await this.$api.get("/admin/assignedEditors/"+id);
+                this.assignedEditors = response.data;
+            }catch(error){
+                console.log(error);
+            }
+        },
+        async searchUsers(){
+            try{
+                const response = await this.$api.get("/admin/searchUsers/"+this.searchedUser);
+                this.searchedUsers = response.data;
+            }catch(error){
+                console.log(error);
+            }
+        },
+        async addEditor(id){
+            try{
+                const params = new URLSearchParams();
+                params.append("conference_id", this.modalData.id);
+                params.append("user_id", id);
+
+                await this.$api.post("/admin/addEditor",params);
+                this.getAssignedEditors(this.modalData.id);
+            }catch(error){
+                console.log(error);
+            }
+        }
     }
 }
 </script>

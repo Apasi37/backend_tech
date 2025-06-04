@@ -60,7 +60,7 @@ class UsersController extends Controller
      */
     public function show(string $id)
     {
-        $user = User::find($id);
+        $user = User::with('conference')->find($id);
 
         if(!$user){
             return response()->json(["message" => "user sa nenasiel"], Response::HTTP_NOT_FOUND);

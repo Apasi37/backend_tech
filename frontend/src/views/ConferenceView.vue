@@ -2,7 +2,7 @@
     <div class="container mt-4 mb-4">
         <div class="row">
             <h3>{{ conference.name }}</h3>
-            <div>
+            <div v-if="UserStore.role=='editor' || UserStore.role=='admin'">
                 <button @click="editToggle = !editToggle" class="btn btn-primary">edit page</button>
                 <button @click="editPage()" class="btn btn-primary ms-2">confirm edit</button>
             </div>
@@ -11,7 +11,7 @@
             <div class="col-3">
                 <ul class="list-group">
                     <button @click="routerPush(i.id)" class="list-group-item list-group-item-action" v-for="i in conference.page">{{ i.name }}</button>
-                    <button @click="" class="btn btn-primary text-center mt-4" data-bs-toggle="modal" data-bs-target="#modalAdd">Add page</button>
+                    <button @click="" class="btn btn-primary text-center mt-4" data-bs-toggle="modal" data-bs-target="#modalAdd" v-if="UserStore.role=='editor' || UserStore.role=='admin'">Add page</button>
                 </ul>
             </div>
             <div class="col">
@@ -58,12 +58,14 @@
 
 <script>
 import Editor from '../components/Wysiwyg.vue'
+import { useUserStore } from '@/stores/UserStore.js'
 export default {
     components:{
         Editor,
     },
     data(){
         return {
+            UserStore: useUserStore(),
             conference: {},
             pageHtml: "",
             editToggle: false,
