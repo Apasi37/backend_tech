@@ -2,7 +2,7 @@
     <div class="container mt-4 mb-4">
         <div class="row">
             <h3>{{ conference.name }}</h3>
-            <div v-if="UserStore.role=='editor' || UserStore.role=='admin'">
+            <div v-if="(UserStore.role=='editor' && editPermission) || UserStore.role=='admin'">
                 <button @click="editToggle = !editToggle" class="btn btn-primary">edit page</button>
                 <button @click="editPage()" class="btn btn-primary ms-2">confirm edit</button>
             </div>
@@ -11,7 +11,7 @@
             <div class="col-3">
                 <ul class="list-group">
                     <button @click="routerPush(i.id)" class="list-group-item list-group-item-action" v-for="i in conference.page">{{ i.name }}</button>
-                    <button @click="" class="btn btn-primary text-center mt-4" data-bs-toggle="modal" data-bs-target="#modalAdd" v-if="UserStore.role=='editor' || UserStore.role=='admin'">Add page</button>
+                    <button @click="" class="btn btn-primary text-center mt-4" data-bs-toggle="modal" data-bs-target="#modalAdd" v-if="(UserStore.role=='editor' && editPermission) || UserStore.role=='admin'">Add page</button>
                 </ul>
             </div>
             <div class="col">
@@ -72,12 +72,28 @@ export default {
             pageName: "",
             modalConfirm: false,
             responseMessage: "",
+            editPermission: false,
         };
     },
     mounted(){
         this.getConference();
+        if(this.UserStore.role=="editor"){
+            this.editorCheck();
+        }
     },
     methods: {
+        async editorCheck(){
+            try {
+                const params = {
+                    "conference_id": parseInt(this.$route.params.id),
+                    "user_id": this.UserStore.userId
+                };
+                const response = await this.$api.post('/editorPermission',params);
+                this.editPermission = response.data;
+            }catch(error){
+                console.log(error);
+            }
+        },
         async addPage(){
             try {
                 const params = new URLSearchParams();

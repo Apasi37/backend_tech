@@ -3,7 +3,7 @@
   <div class="container-fluid">
     <div class="navbar-nav">
       <RouterLink to="/" class="nav-link text-white">Home</RouterLink>
-      <RouterLink to="/admin" class="nav-link text-white" v-if="UserStore.role=='editor' || UserStore.role=='admin'">Admin</RouterLink>
+      <RouterLink to="/admin" class="nav-link text-white" v-if="UserStore.role=='admin'">Admin</RouterLink>
     </div>
     <RouterLink to="/login" v-if="!UserStore.name" class="nav-link text-white">Login</RouterLink>
     <RouterLink to="/profile" v-if="UserStore.name" class="nav-link text-white">{{ UserStore.name }}</RouterLink>

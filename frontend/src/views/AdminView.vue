@@ -2,15 +2,14 @@
     <div class="container mt-4 mb-4">
         <div>
             <label for="tables">Select Table: </label>
-            <select name="tables" id="tables" v-model="selectedTable" @change="getData()">
+            <select class="form-select" name="tables" id="tables" v-model="selectedTable" @change="getData()">
                 <option value="users">Users</option>
                 <option value="conferences">Conferences</option>
             </select>
-            <button data-bs-toggle="modal" data-bs-target="#modalAdd" @click="openModal('add',{})">Add</button>
-            <RouterLink to="/upload">Upload document</RouterLink>
+            <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalAdd" @click="openModal('add',{})">Add</button>
         </div>
 
-        <div class="table-responsive">
+        <div class="table-responsive mt-4">
 
         <div v-if="tableData==false"><p>Table is empty</p></div>
         <table class="table table-bordered table-sm" v-else>
@@ -22,8 +21,8 @@
             <tbody>
                 <tr v-for="data in tableData">
                     <td v-for="i in data" scope="row">{{ i }}</td>
-                    <td><button data-bs-toggle="modal" data-bs-target="#modalEdit" @click="openModal('edit',data)">edit</button></td>
-                    <td><button data-bs-toggle="modal" data-bs-target="#modalDelete" @click="openModal('delete',data)">delete</button></td>
+                    <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEdit" @click="openModal('edit',data)">edit</button></td>
+                    <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDelete" @click="openModal('delete',data)">delete</button></td>
                 </tr>
             </tbody>
         </table>
@@ -148,15 +147,22 @@
                 </table>
                 <div>Assigned editors:</div>
                 <ul class="list-group mt-2">
-                    <li class="list-group-item list-group-item-action" v-for="i in assignedEditors">{{ i.name }}</li>
+                    <li class="list-group-item list-group-item-action" v-for="i in assignedEditors">
+                        {{ i.name }}
+                        <button class="btn btn-primary" @click="removeEditor(i.user_id)">Remove</button>
+                    </li>
                 </ul>
-                <div>Assign editor</div>
-                <div>
-                    <label for="">Search</label>
-                    <input type="text" v-model="searchedUser">
-                    <button class="btn" @click="searchUsers()">Search</button>
+                <div class="mt-4">
+                    <div>Assign editor:</div>
+                    <div class="input-group mt-2">
+                        <input type="text" class="form-control" v-model="searchedUser">
+                        <button class="btn btn-primary" @click="searchUsers()">Search</button>
+                    </div>
                     <ul class="list-group mt-2">
-                        <li class="list-group-item list-group-item-action" v-for="i in searchedUsers">{{ i.name }}<button class="btn" @click="addEditor(i.id)">Add</button></li>
+                        <li class="list-group-item list-group-item-action" v-for="i in searchedUsers">
+                            {{ i.name }}
+                            <button class="btn btn-primary" @click="addEditor(i.id)">Add</button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -316,12 +322,19 @@ export default {
             }
         },
         async searchUsers(){
+            if(this.searchedUser==""){
+                this.getUsers();
+            }else{
+            
             try{
                 const response = await this.$api.get("/admin/searchUsers/"+this.searchedUser);
                 this.searchedUsers = response.data;
             }catch(error){
                 console.log(error);
             }
+            
+            }
+            
         },
         async addEditor(id){
             try{
@@ -330,6 +343,18 @@ export default {
                 params.append("user_id", id);
 
                 await this.$api.post("/admin/addEditor",params);
+                this.getAssignedEditors(this.modalData.id);
+            }catch(error){
+                console.log(error);
+            }
+        },
+        async removeEditor(id){
+            try{
+                const params = {
+                    "conference_id": this.modalData.id,
+                    "user_id": id
+                }
+                await this.$api.post("/admin/removeEditor",params);
                 this.getAssignedEditors(this.modalData.id);
             }catch(error){
                 console.log(error);

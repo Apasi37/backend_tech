@@ -23,10 +23,10 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'name'=>'Redaktor user',
-            'email'=>'redaktor@example.com',
+            'name'=>'Editor user',
+            'email'=>'editor@example.com',
             'password'=>Hash::make('password'),
-            'role'=>'redactor'
+            'role'=>'editor'
         ]);
     }
 }
